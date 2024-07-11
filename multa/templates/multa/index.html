@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Registro de Infracciones San Benito</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-QgnqHk6bB9nOpYDo0P6+KRLu62+8/bFWn6GcPV9cC7kmVd7axcs4Q/TelG7tW9aWJ+lwRhIc9kp+y5zP3xuPw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input, select, textarea, button {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+        input[type="file"] {
+            padding: 3px;
+        }
+        button {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            padding: 15px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            width: auto;
+            margin: 0 auto;
+            display: block;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .form-column {
+            flex: 1;
+            min-width: 300px;
+            padding: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .form-column:nth-child(odd) {
+            background-color: #e9f5f9;
+        }
+        textarea {
+            resize: vertical;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover, .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .actions {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sistema de Registro de Infracciones <br> Municipalidad San Benito</h1>
+    <!-- Sección 1: Registro de Infracción -->
+    <div class="container">
+        <h2><i class="fa fa-clipboard-list"></i>Registrar una Nueva Infracción</h2>
+        <form id="form-registro" onsubmit="mostrarPreRegistro(event)">
+            <div class="form-row">
+                <div class="form-column">
+                    <label for="run-infractor"><i class="fa fa-id-card"></i>RUN del Infractor:</label>
+                    <input type="text" id="run-infractor" name="run-infractor" required placeholder="Ingrese el RUN del infractor">
+
+                    <label for="vehiculo"><i class="fa fa-car"></i>Vehículo Involucrado:</label>
+                    <input type="text" id="vehiculo" name="vehiculo" required placeholder="Ingrese el vehículo involucrado">
+
+                    <label for="via"><i class="fa fa-road"></i>Vía de Circulación:</label>
+                    <input type="text" id="via" name="via" required placeholder="Ingrese la vía de circulación">
+                    
+                    <label for="tipo-infraccion"><i class="fa fa-exclamation-circle"></i>Tipo de Infracción:</label>
+                    <select id="tipo-infraccion" name="tipo-infraccion" required>
+                        <option value="">Seleccione el tipo de infracción</option>
+                        <option value="exceso_velocidad">Exceso de Velocidad</option>
+                        <option value="estacionamiento_prohibido">Estacionamiento Prohibido</option>
+                        <option value="falta_documentacion">Falta de Documentación</option>
+                    </select>
+                    
+                    <label for="multa"><i class="fa fa-money-bill"></i>Multa Vigente Correspondiente:</label>
+                    <input type="number" id="multa" name="multa" required placeholder="Ingrese el monto de la multa">
+                </div>
+                <div class="form-column">
+                    <label for="run-responsable"><i class="fa fa-id-badge"></i>RUN del Responsable:</label>
+                    <input type="text" id="run-responsable" name="run-responsable" required placeholder="Ingrese el RUN del responsable">
+                    
+                    <label for="rol-responsable"><i class="fa fa-user-tag"></i>Rol del Responsable:</label>
+                    <select id="rol-responsable" name="rol-responsable" required>
+                        <option value="">Seleccione el rol del responsable</option>
+                        <option value="inspector_municipal">Inspector Municipal</option>
+                        <option value="carabinero">Carabinero</option>
+                    </select>
+                    
+                    <label for="descripcion"><i class="fa fa-comment-alt"></i>Descripción de la Infracción:</label>
+                    <textarea id="descripcion" name="descripcion" rows="4" required placeholder="Ingrese una descripción de la infracción"></textarea>
+
+                    <label for="imagen-infraccion"><i class="fa fa-camera"></i>Subir Imagen de la Infracción (opcional):</label>
+                    <input type="file" id="imagen-infraccion" name="imagen-infraccion" accept="image/*">
+                    
+                    <label for="sensor-velocidad"><i class="fa fa-tachometer-alt"></i>Datos de Sensores de Velocidad (opcional):</label>
+                    <input type="text" id="sensor-velocidad" name="sensor-velocidad" placeholder="Ingrese datos del sensor de velocidad">
+                </div>
+            </div>
+            <div class="button-container">
+                <button type="submit"><i class="fa fa-save"></i> Registrar Infracción</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Sección 2: Verificación de Datos del Vehículo -->
+    <div class="container">
+        <h2><i class="fa fa-search"></i>Verificar Datos del Vehículo</h2>
+        <form id="form-verificacion">
+            <label for="matricula-verificacion"><i class="fa fa-car"></i>Matrícula del Vehículo:</label>
+            <input type="text" id="matricula-verificacion" name="matricula-verificacion" required placeholder="Ingrese la matrícula del vehículo">
+            <button type="button" onclick="verificarDatos()"><i class="fa fa-search"></i> Verificar</button>
+        </form>
+    </div>
+
+    <!-- Sección 3: Emitir Recibo de Multa -->
+    <div class="container">
+        <h2><i class="fa fa-receipt"></i>Emitir Recibo de Multa</h2>
+        <form id="form-recibo" onsubmit="emitirRecibo(event)">
+            <label for="matricula-recibo"><i class="fa fa-car"></i>Matrícula del Vehículo:</label>
+            <input type="text" id="matricula-recibo" name="matricula-recibo" required placeholder="Ingrese la matrícula del vehículo">
+            <button type="submit"><i class="fa fa-receipt"></i> Emitir Recibo</button>
+        </form>
+        <div id="recibo-multa"></div>
+        <div id="recibo-actions" style="display: none;">
+            <button onclick="imprimirRecibo()"><i class="fa fa-print"></i> Imprimir</button><br>
+            <button onclick="enviarEmail()"><i class="fa fa-envelope"></i> Enviar por Email</button>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="pre-registro-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Pre-registro de Infracción</h2>
+            <div id="pre-registro-contenido"></div>
+            <div class="actions">
+                <button onclick="guardarDatos()">Confirmar Registro</button>
+                <button onclick="cerrarModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function mostrarPreRegistro(event) {
+            event.preventDefault();
+
+            const form = document.getElementById("form-registro");
+            const runInfractor = form["run-infractor"].value;
+            const vehiculo = form["vehiculo"].value;
+            const via = form["via"].value;
+            const tipoInfraccion = form["tipo-infraccion"].value;
+            const multa = form["multa"].value;
+            const runResponsable = form["run-responsable"].value;
+            const rolResponsable = form["rol-responsable"].value;
+            const descripcion = form["descripcion"].value;
+            const sensorVelocidad = form["sensor-velocidad"].value;
+
+            const preRegistro = `
+                <p><strong>RUN del Infractor:</strong> ${runInfractor}</p>
+                <p><strong>Vehículo Involucrado:</strong> ${vehiculo}</p>
+                <p><strong>Vía de Circulación:</strong> ${via}</p>
+                <p><strong>Tipo de Infracción:</strong> ${tipoInfraccion}</p>
+                <p><strong>Multa Vigente Correspondiente:</strong> ${multa}</p>
+                <p><strong>RUN del Responsable:</strong> ${runResponsable}</p>
+                <p><strong>Rol del Responsable:</strong> ${rolResponsable}</p>
+                <p><strong>Descripción de la Infracción:</strong> ${descripcion}</p>
+                <p><strong>Datos de Sensores de Velocidad:</strong> ${sensorVelocidad}</p>
+            `;
+            document.getElementById("pre-registro-contenido").innerHTML = preRegistro;
+
+            const modal = document.getElementById("pre-registro-modal");
+            modal.style.display = "block";
+        }
+
+        function cerrarModal() {
+            const modal = document.getElementById("pre-registro-modal");
+            modal.style.display = "none";
+        }
+
+        function guardarDatos() {
+            const form = document.getElementById("form-registro");
+            const runInfractor = form["run-infractor"].value;
+            const vehiculo = form["vehiculo"].value;
+            const via = form["via"].value;
+            const tipoInfraccion = form["tipo-infraccion"].value;
+            const multa = form["multa"].value;
+            const runResponsable = form["run-responsable"].value;
+            const rolResponsable = form["rol-responsable"].value;
+            const descripcion = form["descripcion"].value;
+            const sensorVelocidad = form["sensor-velocidad"].value;
+
+            const infraccion = {
+                runInfractor,
+                vehiculo,
+                via,
+                tipoInfraccion,
+                multa,
+                runResponsable,
+                rolResponsable,
+                descripcion,
+                sensorVelocidad
+            };
+
+            let infracciones = JSON.parse(localStorage.getItem('infracciones')) || [];
+            infracciones.push(infraccion);
+            localStorage.setItem('infracciones', JSON.stringify(infracciones));
+
+            cerrarModal();
+            form.reset();
+            alert("Datos guardados exitosamente.");
+        }
+
+        function verificarDatos() {
+            alert("Función de verificación en desarrollo.");
+        }
+
+        function emitirRecibo(event) {
+            event.preventDefault();
+
+            const form = document.getElementById("form-recibo");
+            const matricula = form["matricula-recibo"].value;
+
+            let infracciones = JSON.parse(localStorage.getItem('infracciones')) || [];
+            let infraccion = infracciones.find(inf => inf.vehiculo === matricula);
+
+            if (infraccion) {
+                let recibo = `
+                    <h3>Recibo de Multa</h3>
+                    <p><strong>RUN del Infractor:</strong> ${infraccion.runInfractor}</p>
+                    <p><strong>Vehículo Involucrado:</strong> ${infraccion.vehiculo}</p>
+                    <p><strong>Vía de Circulación:</strong> ${infraccion.via}</p>
+                    <p><strong>Tipo de Infracción:</strong> ${infraccion.tipoInfraccion}</p>
+                    <p><strong>Multa Vigente Correspondiente:</strong> ${infraccion.multa}</p>
+                    <p><strong>RUN del Responsable:</strong> ${infraccion.runResponsable}</p>
+                    <p><strong>Rol del Responsable:</strong> ${infraccion.rolResponsable}</p>
+                    <p><strong>Descripción de la Infracción:</strong> ${infraccion.descripcion}</p>
+                    <p><strong>Datos de Sensores de Velocidad:</strong> ${infraccion.sensorVelocidad}</p>
+                `;
+                document.getElementById("recibo-multa").innerHTML = recibo;
+                document.getElementById("recibo-actions").style.display = "block";
+            } else {
+                document.getElementById("recibo-multa").innerHTML = "<p>No se encontraron infracciones para esta matrícula.</p>";
+                document.getElementById("recibo-actions").style.display = "none";
+            }
+        }
+
+        function imprimirRecibo() {
+            window.print();
+        }
+
+        function enviarEmail() {
+            const reciboContenido = document.getElementById("recibo-multa").innerHTML;
+            const correo = "mailto:?subject=Recibo%20de%20Multa&body=" + encodeURIComponent(reciboContenido.replace(/<br>/g, "\n").replace(/<[^>]*>?/gm, ''));
+            window.location.href = correo;
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const modal = document.getElementById("pre-registro-modal");
+            const span = document.getElementsByClassName("close")[0];
+
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+    </script>
+</body>
+</html>
